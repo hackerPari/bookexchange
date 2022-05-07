@@ -5,24 +5,6 @@ const exchangeRequestHelper = require('../db-helpers/exchangeRequest');
 const ObjectId = require('mongoose').Types.ObjectId;
 const book = require('../models/book');
 
-const list = async function (req, res) {
-  req.apiName = 'listBooks';
-  let response = responseUtil.responseObj();
-  try {
-    const favoriteCategories = req.user.favoriteCategories;
-    const query = {}
-    if (favoriteCategories && favoriteCategories.length > 0) {
-        query.category = {'$in': favoriteCategories};
-    }
-    // query.count = {'$gt': 0};
-    let books = await bookHelper.getBooks(query);
-    response.books = books;
-  } catch (e) {
-    response.status = responseUtil.getErrorResponse(e, 'listBooksFailed');
-  }
-  responseUtil.sendResponse(req, res, response);
-}
-
 const exchangeRequest = async function (req, res) {
     req.apiName = 'exchangeRequest';
     let response = responseUtil.responseObj();
@@ -147,28 +129,97 @@ const exchangeRequest = async function (req, res) {
     responseUtil.sendResponse(req, res, response);
 }
 
-
-const getBooksProfile = async function (req, res) {
-    req.apiName = 'booksProfile';
+const borrowBook = async function (req, res) {
+    req.apiName = 'borrowRequest';
     let response = responseUtil.responseObj();
+    response.exchangeStatus = {
+        message: "",
+        successful: false
+    }
+
     try {
         const {user} = req;
-        const bookProfile = {
-            'bookRequests': user.bookRequests ? user.bookRequests : [],
-            'booksLent': user.booksLent ? user.booksLent : [],
-            'booksOwed': user.booksOwed ? user.booksOwed : [],
-            'booksOwned': user.booksOwned ? user.booksOwned: [],
-            'points': user.points ? user.points : 0
-        };
-        response.bookProfile = bookProfile;
+        const {requested} = req.body;
+
+        //check if user has enough points to borrow
+        if (!user.points || user.points <= 0) {
+            response.exchangeStatus.message = "You don't have enough points to borrow books.";
+            return responseUtil.sendResponse(req, res, response);
+        }
+
+        //check if user is requesting book that he doesn't own or owe or already requested
+        const booksOwned = req.user.booksOwned || [];
+        const booksOwed = req.user.booksOwed || [];
+        const bookRequests = req.user.bookRequests || []
+        
+        const allBooks = [...booksOwned, ...booksOwed, ...bookRequests];
+
+        for (var i=0; i<allBooks.length; i++) {
+            if (allBooks[i].book.toString() === requested) {
+                response.exchangeStatus.message = "You already have this book or requested one. Please choose a different book."
+                return responseUtil.sendResponse(req, res, response);
+            }
+        }
+        
+        //check if someone has already lent the book that the user is trying to borrow, if so borrow it immediately
+        const updateResp = await exchangeRequestHelper.findAndModify( //findOneandModify would create a lock on the documents selected
+            {book1: ObjectId(requested), requestStatus: "lendOpen", user1: {'$ne': req.user._id}},
+            {requestStatus: "borrowed", user2: req.user._id, point1: 1, point2: 0} 
+        )
+        
+        const bookRequested = await bookHelper.findOne({'_id': ObjectId(requested)});
+        const currDate = new Date();
+
+        if (updateResp == null) {
+            const exchangeObj = {
+                user1: req.user._id,
+                book1: ObjectId(requested),
+                point1: 0,
+                point2: 0,
+                requestStatus: "borrowOpen" //if no book is already open to lend, create a borrow request, which will be fulfilled when someone lends the book
+            }
+
+            const reqObj = {book: ObjectId(requested), name: bookRequested.name, date: currDate};
+            req.user.bookRequests = req.user.bookRequests ? [...req.user.bookRequests, reqObj] : [reqObj];
+            
+            await exchangeRequestHelper.save(exchangeObj);
+            await userHelper.updateUserProfile(req.user._id, {bookRequests: req.user.bookRequests});
+            
+            response.exchangeStatus.message = "Borrow request placed successfully!"
+
+        } else {
+            
+            // if borrow is executed, update the lender and borrower users with appropriate details
+
+            const lender = await userHelper.findOne({'_id': updateResp.user1});
+            
+            const bookOwed= {book: bookRequested._id, name: bookRequested.name, owner: lender._id, date: currDate, ownerName: lender.name};
+            req.user.booksOwed = req.user.booksOwed ? [...req.user.booksOwed, bookOwed] : [bookOwed];
+
+            const bookLent = {book: bookRequested._id, name: bookRequested.name, borrower: req.user._id, date: currDate, borrowerName: req.user.name};
+            lender.booksLent = lender.booksLent ? [...lender.booksLent, bookLent] : [bookLent];
+
+            await userHelper.updateUserProfile(req.user._id, {booksOwed: req.user.booksOwed});
+
+            await userHelper.updateUserProfile(
+                lender._id,
+                {
+                    booksLent: lender.booksLent,
+                    points: req.user.points ? req.user.points + 1 : 1
+                }
+            )
+
+        }
+
     } catch (e) {
-        response.status = responseUtil.getErrorResponse(e, 'booksProfileFailed');
+        response.status = responseUtil.getErrorResponse(e, 'borrowRequestFailed');
     }
     responseUtil.sendResponse(req, res, response);
-  }
+}
+
+//bookLending would follow more or less the same flow as borrowBook.
 
 module.exports = {
-  list,
   exchangeRequest,
-  getBooksProfile
+  borrowBook
 }
