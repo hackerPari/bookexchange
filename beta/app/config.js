@@ -1,0 +1,2 @@
+export const NODE_API_BASE_URL = 'http://localhost:3050/as-api';
+export const unregisteredToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjcyYTMyZjAyMzU1NGY4NWI5NWVmZmYiLCJyb2xlIjoidW5yZWdpc3RlcmVkVXNlciIsInRpbWVzdGFtcCI6IjIwMjItMDUtMDRUMTY6MDM6MTcuNjIzWiIsImlhdCI6MTY1MTY4MDE5NywiZXhwIjoxNjUyMjg0OTk3fQ.zBjnw2b_EdGx7VGBDOva8TrKiFa2c9rEbqghSR13bss";

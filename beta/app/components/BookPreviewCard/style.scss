@@ -1,0 +1,23 @@
+
+.book-preview-card {
+    img {
+        width: auto;
+        margin-left: 120px;
+    }
+}
+
+.exchange-detail-container {
+    padding: 24px;
+    color: black;
+
+    .exchange-requested-container {
+        padding: 12px;
+        .book-requested {
+            padding-right: 4px;
+        }
+    }
+
+    .exchange-dropdown-container {
+        padding: 12px;
+    }
+}

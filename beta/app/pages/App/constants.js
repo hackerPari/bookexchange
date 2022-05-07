@@ -1,0 +1,4 @@
+export const LOAD_USER_AUTH_SUCCESS = 'Auth/LOAD_USER_AUTH_SUCCESS';
+export const LOAD_USER_AUTH_ERROR = 'Auth/LOAD_USER_AUTH_ERROR';
+export const API_ERROR = 'App/API_ERROR';
+export const RESET_API_ERROR_FLAG = 'App/RESET_API_ERROR_FLAG';

@@ -1,0 +1,11 @@
+node_modules
+*.txt
+.DS_Store
+test-notif.js
+.env
+.env.prod
+.env.dev
+scripts
+server.key
+server.cert
+id_rsa

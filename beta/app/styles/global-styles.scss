@@ -1,0 +1,131 @@
+@import "../../node_modules/katex/dist/katex.min.css";
+@import "../../node_modules/animate.css/animate.min.css";
+@import "../../node_modules/material-design-icons/iconfont/material-icons.css";
+@import 'react-redux-toastr/src/styles/index';
+@import './variables.scss';
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+.app-secondary-color{
+    color:$brand-secondary;
+}
+.app-primary-color{
+  color:$brand-primary;
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #777;
+}
+
+body.fontLoaded {
+  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+#app {
+  min-height: 100%;
+  min-width: 100%;
+}
+
+p,
+label {
+  font-family: Georgia, Times, 'Times New Roman', serif;
+  line-height: 1.5em;
+}
+
+.page-body {
+  padding-top: 65px;
+}
+
+.secondary-color {
+  color:rgba(0, 0, 0, 0.54);
+}
+
+.latexEle {
+  display: inline-block;
+
+  .katex {
+    white-space: normal;
+  }
+}
+
+.tippy-content {
+  max-width: 400px;
+}
+.thin-text{
+  font-weight: 300;
+}
+
+.blinking{
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%   {opacity: 0;}
+  25%  {opacity: 0;}
+  50%  {opacity: 1;}
+  75%  {opacity: 1;}
+  100% {opacity: 1;}
+}
+
+.clearfix::after {
+	 content: " ";
+	 display: block; 
+	 height: 0; 
+	 clear: both;
+}
+
+@-moz-document url-prefix() {
+  * {
+    &:active, &:focus {
+      outline: none;
+    }
+  }  
+}
+
+.chapter-name {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 150px;
+  font-size:13px;
+}
+
+.chapter-revision-summary {
+  font-size: 12px;
+  position: absolute;
+  bottom: 12px;
+  width: 95%;
+  margin-left: -18px;
+  margin-right: 9px;
+}
+
+.chapter-card {
+  width: 200px;
+  height: 175px;
+  display: inline-block;
+  padding: 8px;
+  margin-top: 16px;
+  margin-right: 16px;
+  position: relative;
+  vertical-align: top;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-bottom: 10px;
+
+  &:active, &-selected {
+    background: #e6eef1;
+  }
+}
+
+.chapter-list {
+  border:0px;
+  margin-left: 12px;
+  margin-right: 36px;
+}
