@@ -37,7 +37,8 @@ const UserSchema = new Schema({
         'borrower': {type: ObjectId, ref:'user'}, 
         borrowerName: String, 
         date: Date
-    }]
+    }],
+    favoriteCategories: [String]
 }, {
     strict: false,
     timestamps: true

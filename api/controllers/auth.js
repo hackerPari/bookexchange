@@ -57,6 +57,7 @@ const signup = async function (req, res) {
       req.body.role = 'registeredUser';
       req.body.salt = authHelper.generateSalt();
       req.body.password = authHelper.generatePasswordHash(req.body.password, req.body.salt);
+      req.body.booksOwned = await authHelper.getRandomBooks();
       const user_obj = await userHelper.save(req.body);
       response.user = authHelper.getUserObject(user_obj);
     }

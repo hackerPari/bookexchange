@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const userDBHelper = require('../db-helpers/user');
 const responseUtil = require('./response');
+const bookHelper = require('../db-helpers/book');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const generateToken = function(user) {
   // TODO: move to config
@@ -45,11 +47,37 @@ const getUserObject = function (user) {
   return auth;
 };  
 
+const getRandomBooks = async function() {
+  const allBooks = await bookHelper.findAll();
+  const randomBooks = [];
+  var len = allBooks.length;
+  for (var i=0; i<3; i++) {
+    var randomIdx = getRandomInt(len-i);
+    var book = allBooks[randomIdx];
+    randomBooks.push({
+      _id: ObjectId(),
+      book: book._id,
+      name: book.name,
+      count: 1,
+      givenCount: 0 
+    })
+
+    allBooks.splice(randomIdx, 1);
+  }
+
+  return new Promise((resolve, reject) => resolve(randomBooks));
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
 module.exports = {
   generateToken,
   generateSalt,
   generatePasswordHash,
   setPassword,
   verifyPassword,
-  getUserObject
+  getUserObject,
+  getRandomBooks
 }

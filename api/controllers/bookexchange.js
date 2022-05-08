@@ -113,7 +113,7 @@ const exchangeRequest = async function (req, res) {
                                 booksOwed: borrower.booksOwed,
                                 booksLent: borrower.booksLent,
                                 bookRequests: borrower.bookRequests,
-                                points: req.user.points ? req.user.points + 1 : 1
+                                points: borrower.points ? borrower.points + 1 : 1
                             }
                         )
 
@@ -205,7 +205,7 @@ const borrowBook = async function (req, res) {
                 lender._id,
                 {
                     booksLent: lender.booksLent,
-                    points: req.user.points ? req.user.points + 1 : 1
+                    points: lender.points ? lender.points + 1 : 1
                 }
             )
 
