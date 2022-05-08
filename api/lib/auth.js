@@ -7,7 +7,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 
 const generateToken = function(user) {
   // TODO: move to config
-  return jwt.sign({ _id: user.id, role: user.role, timestamp: new Date() }, 'assess-ui-secret', {
+  return jwt.sign({ _id: user.id, role: user.role, timestamp: new Date() }, 'exchange-secret', {
     expiresIn: 7 * 24 * 60 * 60
   });
 };

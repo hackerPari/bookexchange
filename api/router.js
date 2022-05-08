@@ -2,7 +2,7 @@
 
 const expressJwt = require('express-jwt');
 const validateJwt = expressJwt({
-  secret: 'assess-ui-secret'
+  secret: 'exchange-secret'
 });
 
 const middleware = require('./lib/middleware');

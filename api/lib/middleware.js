@@ -7,7 +7,7 @@ const expressJwt = require('express-jwt');
 const validateJWT = async function (req, res, next) {
   try {
     validateJwt = expressJwt({
-      secret: 'assess-ui-secret'
+      secret: 'exchange-secret'
     });
     next();
   } catch (e) {
