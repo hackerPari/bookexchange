@@ -1,7 +1,5 @@
 import React from 'react';
-import { Switch, Route, Redirect, Router, HashRouter } from 'react-router-dom';
-import LoadingIndicator from 'components/LoadingIndicator';
-import { Icon, Link, Grid, Chip, Avatar, Paper, Typography, GridList, GridListTile, GridListTileBar, Button, TextField} from '@material-ui/core';
+import { Grid} from '@material-ui/core';
 import style from './style'
 import BookPreviewCard from 'components/BookPreviewCard';
 import { isLoggedIn } from 'utils/utility';

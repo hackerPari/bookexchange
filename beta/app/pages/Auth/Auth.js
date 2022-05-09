@@ -28,7 +28,7 @@ class Auth extends React.PureComponent {
       <HashRouter>
         <Switch>
           <Route path='/books' component={Books} />
-          <Redirect exact from='/' to='/books' />;
+          <Redirect exact from='/' to='/books/listing' />;
         </Switch>
       </HashRouter>
     )

@@ -1,5 +1,6 @@
-import { call, put, select, takeLatest } from 'redux-saga/effects';
+import { call, put, select, takeLatest, take, cancel, all } from 'redux-saga/effects';
 import { LIST_REQUEST, BOOK_EXCHANGE_REQUEST } from './constants';
+import { LOCATION_CHANGE } from 'react-router-redux';
 import { list, listError, listSuccess, exchangeSuccess, exchangeError } from './actions';
 import { apiErrorOccurred } from 'pages/App/actions';
 import request from 'utils/request';
@@ -42,5 +43,7 @@ export function* exchangeRequest(action) {
 
 export default function* bookListingSaga() {
   yield takeLatest(LIST_REQUEST, listBooks);
-  yield takeLatest(BOOK_EXCHANGE_REQUEST, exchangeRequest);
+  let watcher = yield takeLatest(BOOK_EXCHANGE_REQUEST, exchangeRequest);
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
 }

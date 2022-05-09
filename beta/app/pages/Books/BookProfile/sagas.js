@@ -20,6 +20,6 @@ export function* getBookProfile () {
   }
 }
 
-export default function* bookListingSaga() {
+export default function* bookProfileSaga() {
   yield takeLatest(PROFILE_REQUEST, getBookProfile);
 }
